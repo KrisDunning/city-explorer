@@ -10,11 +10,10 @@ class SearchResults extends React.Component{
 
     return (
       <>
-      {/* console.log({this.props.lat}, {this.props.lon}, {this.props.city}); */}
         <p>The City we found was : {this.props.city} </p>
         <p>The Latitude is : {this.props.lat} </p>
         <p>The Longitude is : {this.props.lon} </p>
-
+        <img src={this.props.mapImg} alt="Map of selected city"/>
       </>
     );
     

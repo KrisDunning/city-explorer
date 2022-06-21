@@ -46,10 +46,10 @@ Name of feature: ____User Input Form and Location IQ request/response_____
 
 Estimate of time needed to complete: __75 min___
 
-Start time: ___304:pm_
+Start time: ___3:04pm_
 
-Finish time: __pm___
+Finish time: __8:49pm___
 
-Actual time needed to complete: _____
+Actual time needed to complete: __5hr30min___
 
 -----
