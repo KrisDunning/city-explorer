@@ -22,6 +22,11 @@ Web page using HTML, CSS, JS, REACT, NODE.JS, React-Bootstrap, AXIOS. User enter
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+Dennis Devries collaborator on whiteboard drawing.
+
+<img src='./whiteboard.pdf'/>
+
+
 Time Estimates
 For each of the lab features, make an estimate of the time it will take you to complete the feature, and record your start and finish times for that feature:
 
@@ -31,6 +36,20 @@ Estimate of time needed to complete: __45 min___
 
 Start time: ___2:15pm__
 
-Finish time: _____
+Finish time: __3:02pm___
+
+Actual time needed to complete: ___46min__
+
+-----
+
+Name of feature: ____User Input Form and Location IQ request/response_____
+
+Estimate of time needed to complete: __75 min___
+
+Start time: ___304:pm_
+
+Finish time: __pm___
 
 Actual time needed to complete: _____
+
+-----
