@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import SearchResults from './SearchResults';
 import PopUp from './Modal.js';
+import Weather from './weather.js'
 
 class Main extends React.Component {
   constructor(props) {
@@ -42,7 +43,6 @@ class Main extends React.Component {
     });
   };
 
-
   handleOnInput = (e) => {
     this.setState({
       userInput: e.target.value,
@@ -52,6 +52,7 @@ class Main extends React.Component {
 
   render() {
     let displayThis;
+    let weatherDisplay;
     console.log(this.state);
     if (this.state.error) {
       displayThis =
@@ -67,7 +68,14 @@ class Main extends React.Component {
           lon={this.state.cityObj.lon}
           mapImgUrl={this.state.mapImgUrl}
         />
-      console.log(this.state);
+
+      weatherDisplay=
+      <Weather
+        city={this.state.cityObj.display_name}
+        lat={this.state.cityObj.lat}
+        lon={this.state.cityObj.lon}
+      />
+ 
     }
 
     return (
@@ -79,6 +87,7 @@ class Main extends React.Component {
           </label>
           <button > Explore!</button>
         </form>
+      <div>{weatherDisplay}</div>
       </>
     )
 
