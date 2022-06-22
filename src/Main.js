@@ -7,27 +7,24 @@ class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lat: '',
-      lon: '',
-      city: '',
+      cityObj: {},
       userInput: '',
       error: false,
       errorMsg: '',
       errorCode: '',
-      mapImg: '',
+      mapImgUrl: '',
     }
   }
 
   handleOnSubmit = async (event) => {
     event.preventDefault();
     let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_ctyxplr_API_KEY}&q=${this.state.userInput}&format=json`;
-
+    let resultingObj = {};
     try {
-      let resultingObj = await axios.get(url);
+      resultingObj = await axios.get(url);
+      resultingObj = resultingObj.data[0];
       this.setState({
-        lat: resultingObj.data[0].lat,
-        lon: resultingObj.data[0].lon,
-        city: resultingObj.data[0].display_name,
+        cityObj: resultingObj,
         error: false,
       });
     } catch (error) {
@@ -36,63 +33,56 @@ class Main extends React.Component {
         errorMsg: error.message,
         error: true
       });
-      console.log(error.toJSON());
-      console.log("ERROR CAUGHT!", this.state.errorCode, this.state.errorMsg);
+      console.log("ERROR CAUGHT!", error.message);
     }
-    try {
-      let anotherURL=`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${this.state.lat},${this.state.lon}&zoom=12`;
-      let mapResult = await axios.get(anotherURL);
-      console.log("MAPIMG: ", this.state.mapImg);
-      this.setState({
-        mapImg: mapResult,
-      });
-    }
-    catch (error) {
-      console.log("MAP GET ERROR!!!!");
-    };
+
+    let mapURL = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${resultingObj.lat},${resultingObj.lon}&zoom=12`;
+    this.setState({
+      mapImgUrl: mapURL,
+    });
   };
 
 
-handleOnInput = (e) => {
-  this.setState({
-    userInput: e.target.value,
-  });
-  console.log(this.state.userInput);
-};
+  handleOnInput = (e) => {
+    this.setState({
+      userInput: e.target.value,
+    });
+  };
 
 
-render(){
-  console.log(this.state);
-  let displayThis;
-  if (this.state.error) {
-    displayThis =
-      <PopUp
-        errorMsg={this.state.errorMsg}
-        errorCode={this.errorCdoe}
-      />
-    console.log("CALLED MODAL!");
-  } else {
-    displayThis =
-      <SearchResults
-        city={this.state.city}
-        lat={this.state.lat}
-        lon={this.state.lon}
-        mapImg={this.state.mapImg}
-      />
+  render() {
+    let displayThis;
+    console.log(this.state);
+    if (this.state.error) {
+      displayThis =
+        <PopUp
+          errorMsg={this.state.errorMsg}
+          errorCode={this.state.errorCode}
+        />
+    } else {
+      displayThis =
+        <SearchResults
+          city={this.state.cityObj.display_name}
+          lat={this.state.cityObj.lat}
+          lon={this.state.cityObj.lon}
+          mapImgUrl={this.state.mapImgUrl}
+        />
+      console.log(this.state);
+    }
+
+    return (
+      <>
+        <div>{displayThis}</div>
+        <form onSubmit={this.handleOnSubmit}>
+          <label>
+            <input type='text' placeholder='Please enter city name...' onChange={this.handleOnInput}></input>
+          </label>
+          <button > Explore!</button>
+        </form>
+      </>
+    )
+
   }
-
-  return (
-    <>
-      <div>{displayThis}</div>
-      <form onSubmit={this.handleOnSubmit}>
-        <label>
-          <input type='text' placeholder='Please enter city name...' onChange={this.handleOnInput}></input>
-        </label>
-        <button > Explore!</button>
-      </form>
-    </>
-  );
-}
 
 
 }

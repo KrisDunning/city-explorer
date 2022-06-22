@@ -10,26 +10,29 @@ constructor(props){
   }
 }
 
+handleClose=()=>{
+  this.setState({
+    show:false,
+  })
+}
 
   render(){
 
     return (
         <Modal
-          show='true'
+          show={this.state.show}
+          onHide= {this.handleClose}
           >
           <Modal.Header closeButton>
             <Modal.Title>
-              !!!  ERROR  !!!
+              <p>
+              {this.props.errorCode}
+              </p>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>
-              testsetestsetes
-              {this.props.errorMSG}
-            </p>
-            <p>
-              32432432432423
-              {this.props.errorCode}
+              {this.props.errorMsg}
             </p>
           </Modal.Body>
         </Modal>      

@@ -23,9 +23,10 @@ Web page using HTML, CSS, JS, REACT, NODE.JS, React-Bootstrap, AXIOS. User enter
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 Dennis Devries collaborator on whiteboard drawing.
+![whiteboardDrawing](src/whiteboardOne.png)
 
-<img src='./whiteboard.pdf'/>
-
+Marvin Bonds collaborator on whiteboard drawing #2.
+![whiteboardDrawing2](src/whiteboardTwo.png)
 
 Time Estimates
 For each of the lab features, make an estimate of the time it will take you to complete the feature, and record your start and finish times for that feature:
