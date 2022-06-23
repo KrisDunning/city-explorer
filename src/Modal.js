@@ -3,18 +3,18 @@ import Modal from 'react-bootstrap/Modal'
 
 
 class PopUp extends React.Component{
-constructor(props){
-  super(props);
-  this.state={
-    show:true,
+  constructor(props){
+    super(props);
+    this.state={
+      show:true,
+    }
   }
-}
 
-handleClose=()=>{
-  this.setState({
-    show:false,
-  })
-}
+  handleClose=()=>{
+    this.setState({
+      show:false,
+    })
+  }
 
   render(){
 
@@ -39,7 +39,7 @@ handleClose=()=>{
 
     );
     
-  }
+  };
 
-}
+};
 export default PopUp;
