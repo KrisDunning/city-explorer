@@ -15,33 +15,18 @@ class Main extends React.Component {
       errorCode: '',
       mapImgUrl: '',
       showWeather: false,
-      returnedWeatherData: {},
+      returnedWeatherData: [],
+      returnedMovieData: [],
     }
   }
 
   handleOnSubmit = async (event) => {
     event.preventDefault();
-    let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_ctyxplr_API_KEY}&q=${this.state.userInput}&format=json`;
-    let resultingObj = {};
-    try {
-      resultingObj = await axios.get(url);
-      resultingObj = resultingObj.data[0];
-      this.setState({
-        cityObj: resultingObj,
-        error:false,
-      });
-    }catch (error) {
-       this.setState({
-        error:true,
-        errorCode:error.code,
-        errorMsg:error.message
-       });
-      };
-    let mapURL = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${resultingObj.lat},${resultingObj.lon}&zoom=12`;
-    this.setState({
-      mapImgUrl: mapURL,
-    });
-    this.handleWeather(this.state.userInput, resultingObj.lat, resultingObj.lon);
+    this.handleLocation(this.state.userInput);
+    console.log('this.cityObj.lat/lon',this.cityObj);
+    this.handleMap(this.state.cityObj.lat,this.state.cityObj.lon);
+    this.handleWeather(this.state.cityObj.lat, this.state.cityObj.lon);
+    this.handleMovies(this.state.userInput);
   };
 
   handleOnInput = (e) => {
@@ -50,47 +35,69 @@ class Main extends React.Component {
     });
   };
 
-  handleWeather = async (searchQuery, lat, lon) => {
+  handleLocation = async (city) => {
+    let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_ctyxplr_API_KEY}&q=${city}&format=json`;
+    let resultingObj = {};
     try {
-      let weatherURL = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.REACT_APP_weather_API_KEY}&units=I&days=3`;
-      let returnedWeather = await axios.get(weatherURL);
-      returnedWeather = returnedWeather.data.data;
-      console.log('Weather Component setting this to display: ', returnedWeather);
+      resultingObj = await axios.get(url);
+      resultingObj = resultingObj.data[0];
+      console.log('resulting obj: '.resultingObj);
       this.setState({
-        returnedWeatherData: returnedWeather,
-        showWeather: true,
-        error:false,
+        cityObj: resultingObj,
       });
-     //document.getElementById('hidden').style.display = 'block';
-      } catch (error) {
-        this.setState({
-          error:true,
-          errorCode:error.code,
-          errorMsg:error.message
-         });
-      } 
+    } catch (error) {
+      console.log(error.message);
     };
+  };
   
 
-    handleError = (errorMsg, errorCode) => {
-      return <PopUp
-        errorMsg={errorMsg}
-        errorCode={errorCode}
-      />
+  handleMap= async (lat,lon)=>{
+    let mapURL = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${lat},${lon}&zoom=12`;
+    this.setState({
+    mapImgUrl: mapURL,
+    });
+  };
+
+  handleWeather = async (lat, lon) => {
+    console.log('handleWeather lat/lon: ', lat, lon);
+    let backendURL = `${process.env.REACT_APP_NODE_SERVER}/weather?lat=${lat}&lon=${lon}`
+    try {
+      let returnedWeatherData = axios.get(backendURL);
+      returnedWeatherData = returnedWeatherData.data;
+      console.log("This is WX date from backed: ", returnedWeatherData);
+    } catch (error) {
+      console.log(error.message);
     }
-  
+  };
+
+  handleMovies = async (searchQuery) => {
+    let backendURL = `${process.env.REACT_APP_NODE_SERVER}/movies?searchQuery=${searchQuery}`;
+    try {
+      let returnedMovieData = axios.get(backendURL);
+      console.log('This is the returnedMovieData: ', returnedMovieData);
+      this.setState({
+        movieData: returnedMovieData,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  handleError = (errorMsg, errorCode) => {
+    return <PopUp
+      errorMsg={errorMsg}
+      errorCode={errorCode}
+    />
+  }
+
 
 
   render() {
     let displayThis;
     if (this.state.error) {
       displayThis =
-      this.handleError(this.state.errorMsg,this.state.errorCode);
-        // <PopUp
-        //   errorMsg={this.state.errorMsg}
-        //   errorCode={this.state.errorCode}
-        // />
-    
+        this.handleError(this.state.errorMsg, this.state.errorCode);
+
     } else {
       displayThis =
         <SearchResults

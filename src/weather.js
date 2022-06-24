@@ -10,7 +10,7 @@ class Weather extends React.Component{
     return (
       <>
         <h2>
-          Here is your 3 day Forecast for:
+          Here is your 3 day Forecast for: 
         </h2>
         <p>
           {this.props.returnedWeatherData[0].datetime}
