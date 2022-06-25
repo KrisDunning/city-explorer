@@ -22,11 +22,7 @@ class Main extends React.Component {
 
   handleOnSubmit = async (event) => {
     event.preventDefault();
-    this.handleLocation(this.state.userInput);
-    console.log('this.cityObj.lat/lon',this.cityObj);
-    this.handleMap(this.state.cityObj.lat,this.state.cityObj.lon);
-    this.handleWeather(this.state.cityObj.lat, this.state.cityObj.lon);
-    this.handleMovies(this.state.userInput);
+    this.handleLocation(this.state.userInput); 
   };
 
   handleOnInput = (e) => {
@@ -42,21 +38,18 @@ class Main extends React.Component {
       resultingObj = await axios.get(url);
       resultingObj = resultingObj.data[0];
       console.log('resulting obj: '.resultingObj);
+      let mapURL = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${resultingObj.lat},${resultingObj.lon}&zoom=12`;
       this.setState({
+        mapImgUrl: mapURL,
         cityObj: resultingObj,
-      });
+      },console.log("city obj set to state",this.state.cityObj)
+      );
     } catch (error) {
       console.log(error.message);
     };
+    this.handleWeather(resultingObj.lat, resultingObj.lon);
   };
-  
 
-  handleMap= async (lat,lon)=>{
-    let mapURL = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${lat},${lon}&zoom=12`;
-    this.setState({
-    mapImgUrl: mapURL,
-    });
-  };
 
   handleWeather = async (lat, lon) => {
     console.log('handleWeather lat/lon: ', lat, lon);
@@ -68,10 +61,11 @@ class Main extends React.Component {
     } catch (error) {
       console.log(error.message);
     }
+    this.handleMovies(this.state.userInput);
   };
 
   handleMovies = async (searchQuery) => {
-    let backendURL = `${process.env.REACT_APP_NODE_SERVER}/movies?searchQuery=${searchQuery}`;
+    let backendURL = `${process.env.REACT_APP_NODE_SERVER}/movies?city=${searchQuery}`;
     try {
       let returnedMovieData = axios.get(backendURL);
       console.log('This is the returnedMovieData: ', returnedMovieData);
