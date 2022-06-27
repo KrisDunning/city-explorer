@@ -37,13 +37,11 @@ class Main extends React.Component {
     try {
       resultingObj = await axios.get(url);
       resultingObj = resultingObj.data[0];
-      console.log('resulting obj: '.resultingObj);
       let mapURL = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_ctyxplr_API_KEY}&center=${resultingObj.lat},${resultingObj.lon}&zoom=12`;
       this.setState({
         mapImgUrl: mapURL,
         cityObj: resultingObj,
-      },console.log("city obj set to state",this.state.cityObj)
-      );
+      });
     } catch (error) {
       console.log(error.message);
     };
@@ -52,12 +50,11 @@ class Main extends React.Component {
 
 
   handleWeather = async (lat, lon) => {
-    console.log('handleWeather lat/lon: ', lat, lon);
     let backendURL = `${process.env.REACT_APP_NODE_SERVER}/weather?lat=${lat}&lon=${lon}`
     try {
-      let returnedWeatherData = axios.get(backendURL);
+      let returnedWeatherData = await axios.get(backendURL);
+      console.log("This is WX date from backed: ", returnedWeatherData.data);
       returnedWeatherData = returnedWeatherData.data;
-      console.log("This is WX date from backed: ", returnedWeatherData);
     } catch (error) {
       console.log(error.message);
     }
@@ -67,10 +64,10 @@ class Main extends React.Component {
   handleMovies = async (searchQuery) => {
     let backendURL = `${process.env.REACT_APP_NODE_SERVER}/movies?city=${searchQuery}`;
     try {
-      let returnedMovieData = axios.get(backendURL);
-      console.log('This is the returnedMovieData: ', returnedMovieData);
+      let returnedMovieData = await axios.get(backendURL);
+      console.log('This is the returnedMovieData: ', returnedMovieData.data);
       this.setState({
-        movieData: returnedMovieData,
+        movieData: returnedMovieData.data,
       });
     } catch (error) {
       console.log(error.message);
