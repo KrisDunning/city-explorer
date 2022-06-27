@@ -4,6 +4,8 @@ import SearchResults from './SearchResults';
 import PopUp from './Modal.js';
 import Weather from './Weather.js';
 import Movies from './Movies.js';
+import './Main.css'
+
 
 
 class Main extends React.Component {
@@ -114,7 +116,7 @@ class Main extends React.Component {
     };
 
     return (
-      <>
+      <div className='main'>
         <form onSubmit={this.handleOnSubmit}>
           <label>
             <input type='text' placeholder='Please enter city name...' onChange={this.handleOnInput}></input>
@@ -122,7 +124,7 @@ class Main extends React.Component {
           <button > Explore!</button>
         </form>
         <div>{displayThis}</div>
-      </>
+      </div>
     );
 
   };

@@ -6,10 +6,9 @@ class Movies extends React.Component{
   
   render(){
     let moviesData=this.props.movies;
-    console.log ('Movies Data: ',moviesData);
     let movieDisplay=moviesData.map((movie,idx)=>{
-      let posterURL=`https://image.tmdb.org/t/p/w300/${movie.posterPath}`;
-     return <div key={idx}>
+    let posterURL=`https://image.tmdb.org/t/p/w200/${movie.posterPath}`;
+     return <section key={idx}>
       <h3>
         {movie.title}
       </h3>
@@ -17,17 +16,17 @@ class Movies extends React.Component{
       <p>
         {movie.description}
       </p>
-      </div>
+      </section>
     });
 
     return (
       <>
-        <h2>
+      <h2>
           Movies Related to your search
         </h2>
-        <div>
+      <div className='movie-display'>
         {movieDisplay}          
-        </div>
+      </div>
       </>
     );
     

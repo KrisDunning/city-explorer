@@ -6,7 +6,7 @@ class SearchResults extends React.Component{
   render(){
 
     return (
-      <div key='0'>
+      <div key='0' className='search-results'>
         <p>The City we found was : {this.props.city} </p>
         <p>The Latitude is : {this.props.lat} </p>
         <p>The Longitude is : {this.props.lon} </p>
