@@ -2,7 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import SearchResults from './SearchResults';
 import PopUp from './Modal.js';
-//import Weather from './weather.js'
+import Weather from './Weather.js';
+import Movies from './Movies.js';
+
 
 class Main extends React.Component {
   constructor(props) {
@@ -10,13 +12,13 @@ class Main extends React.Component {
     this.state = {
       cityObj: {},
       userInput: '',
-      error: false,
-      errorMsg: '',
-      errorCode: '',
+      // error: false,
+      // errorMsg: '',
+      // errorCode: '',
+      goodResults:false,
       mapImgUrl: '',
-      showWeather: false,
-      returnedWeatherData: [],
-      returnedMovieData: [],
+      weatherData: [],
+      movieData: [],
     }
   }
 
@@ -43,7 +45,9 @@ class Main extends React.Component {
         cityObj: resultingObj,
       });
     } catch (error) {
+      this.handleError(error.message,error.code);
       console.log(error.message);
+     
     };
     this.handleWeather(resultingObj.lat, resultingObj.lon);
   };
@@ -53,9 +57,12 @@ class Main extends React.Component {
     let backendURL = `${process.env.REACT_APP_NODE_SERVER}/weather?lat=${lat}&lon=${lon}`
     try {
       let returnedWeatherData = await axios.get(backendURL);
-      console.log("This is WX date from backed: ", returnedWeatherData.data);
-      returnedWeatherData = returnedWeatherData.data;
+      // console.log("This is WX date from backed: ", returnedWeatherData.data);
+      this.setState({
+        weatherData:returnedWeatherData.data
+      });
     } catch (error) {
+      this.handleError(error.message,error.code);
       console.log(error.message);
     }
     this.handleMovies(this.state.userInput);
@@ -65,11 +72,13 @@ class Main extends React.Component {
     let backendURL = `${process.env.REACT_APP_NODE_SERVER}/movies?city=${searchQuery}`;
     try {
       let returnedMovieData = await axios.get(backendURL);
-      console.log('This is the returnedMovieData: ', returnedMovieData.data);
+      // console.log('This is the returnedMovieData: ', returnedMovieData.data);
       this.setState({
         movieData: returnedMovieData.data,
+        goodResults:true,
       });
     } catch (error) {
+      this.handleError(error.message,error.code);
       console.log(error.message);
     }
   };
@@ -85,30 +94,34 @@ class Main extends React.Component {
 
   render() {
     let displayThis;
-    if (this.state.error) {
-      displayThis =
-        this.handleError(this.state.errorMsg, this.state.errorCode);
-
+    if (this.state.goodResults===false) {
+      displayThis ='';
     } else {
-      displayThis =
-        <SearchResults
+      displayThis =[
+        <SearchResults key='0'
           city={this.state.cityObj.display_name}
           lat={this.state.cityObj.lat}
           lon={this.state.cityObj.lon}
-          mapImgUrl={this.state.mapImgUrl}
+          mapImgUrl={this.state.mapImgUrl}          
+        />,
+        <Weather key='1'
+        weather={this.state.weatherData}
+        />,
+        <Movies key='2'
+        movies={this.state.movieData}
         />
+      ]
     };
 
     return (
       <>
-        <div>{displayThis}</div>
         <form onSubmit={this.handleOnSubmit}>
           <label>
             <input type='text' placeholder='Please enter city name...' onChange={this.handleOnInput}></input>
           </label>
           <button > Explore!</button>
         </form>
-        {/* <div id='hidden'><Weather returnedWeatherData={this.state.returnedWeatherData}/></div> */}
+        <div>{displayThis}</div>
       </>
     );
 
